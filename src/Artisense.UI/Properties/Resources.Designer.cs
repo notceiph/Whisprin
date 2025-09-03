@@ -1,5 +1,7 @@
 // Copyright (c) Artisense. All rights reserved.
 
+#nullable disable
+
 using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
@@ -19,9 +21,9 @@ namespace Artisense.UI.Properties
     [CompilerGenerated]
     internal class Resources
     {
-        private static ResourceManager? resourceMan;
+        private static ResourceManager resourceMan;
 
-        private static CultureInfo? resourceCulture;
+        private static CultureInfo resourceCulture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Resources"/> class.

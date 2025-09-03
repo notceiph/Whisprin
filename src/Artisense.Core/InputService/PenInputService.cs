@@ -24,16 +24,22 @@ namespace Artisense.Core.InputService
         /// <param name="logger">The logger instance.</param>
         /// <param name="rawInputProvider">The raw input provider.</param>
         /// <param name="wintabProvider">The Wintab provider.</param>
+        /// <param name="windowsInkProvider">The Windows Ink provider.</param>
+        /// <param name="globalHookProvider">The global hook provider.</param>
         public PenInputService(
             ILogger<PenInputService> logger,
             RawInputPenProvider rawInputProvider,
-            WintabPenProvider wintabProvider)
+            WintabPenProvider wintabProvider,
+            WindowsInkPenProvider windowsInkProvider,
+            GlobalHookPenProvider globalHookProvider)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             
-            // Order providers by preference (Raw Input first, then Wintab fallback)
+            // Order providers by preference (Global Hook first for maximum compatibility)
             providers = new IPenInputProvider[]
             {
+                globalHookProvider ?? throw new ArgumentNullException(nameof(globalHookProvider)),
+                windowsInkProvider ?? throw new ArgumentNullException(nameof(windowsInkProvider)),
                 rawInputProvider ?? throw new ArgumentNullException(nameof(rawInputProvider)),
                 wintabProvider ?? throw new ArgumentNullException(nameof(wintabProvider))
             };
@@ -73,14 +79,16 @@ namespace Artisense.Core.InputService
                     {
                         activeProvider = provider;
                         SubscribeToEvents(provider);
-                        logger.LogInformation("Started pen input provider: {ProviderType}", provider.GetType().Name);
+                        logger.LogInformation("✅ Started pen input provider: {ProviderType}", provider.GetType().Name);
+                        Console.WriteLine($"✅ Active pen provider: {provider.GetType().Name}");
                         break;
                     }
                 }
 
                 if (activeProvider == null)
                 {
-                    logger.LogError("Failed to start any pen input provider");
+                    logger.LogError("❌ Failed to start any pen input provider");
+                    Console.WriteLine("❌ No pen input providers could be started!");
                     return;
                 }
 

@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -185,8 +186,19 @@ namespace Artisense.Core.AudioService
                     VolumeOffsetDb = volumeOffsetDb
                 };
 
-                // Create WASAPI output in exclusive mode for lowest latency
-                audioOutput = new WasapiOut(NAudio.CoreAudioApi.AudioClientShareMode.Exclusive, 50); // 50ms latency
+                // Try WASAPI exclusive mode first, fallback to shared mode
+                try
+                {
+                    audioOutput = new WasapiOut(NAudio.CoreAudioApi.AudioClientShareMode.Exclusive, 50);
+                    logger.LogInformation("Audio initialized in exclusive mode");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning(ex, "Exclusive mode failed, trying shared mode");
+                    audioOutput = new WasapiOut(NAudio.CoreAudioApi.AudioClientShareMode.Shared, 100);
+                    logger.LogInformation("Audio initialized in shared mode");
+                }
+
                 audioOutput.Init(volumeProcessor);
                 
                 logger.LogInformation("Audio output initialized successfully");
@@ -202,10 +214,36 @@ namespace Artisense.Core.AudioService
         {
             try
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                var resourceName = "Artisense.UI.Assets.pencil_loop.wav";
+                // Try to load from UI assembly (where the resource is embedded)
+                #pragma warning disable S6602 // Using FirstOrDefault for assembly search is appropriate here
+                var uiAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(a => a.GetName().Name == "Artisense.UI");
+                #pragma warning restore S6602
                 
-                return assembly.GetManifestResourceStream(resourceName);
+                if (uiAssembly != null)
+                {
+                    var resourceName = "Artisense.UI.Assets.pencil_loop.wav";
+                    var stream = uiAssembly.GetManifestResourceStream(resourceName);
+                    if (stream != null)
+                    {
+                        logger.LogInformation("Successfully loaded embedded audio resource");
+                        return stream;
+                    }
+                }
+                
+                // Fallback: try current assembly
+                var assembly = Assembly.GetExecutingAssembly();
+                var fallbackResourceName = "Artisense.UI.Assets.pencil_loop.wav";
+                var fallbackStream = assembly.GetManifestResourceStream(fallbackResourceName);
+                
+                if (fallbackStream != null)
+                {
+                    logger.LogInformation("Loaded audio resource from current assembly");
+                    return fallbackStream;
+                }
+                
+                logger.LogError("Failed to find embedded audio resource in any assembly");
+                return null;
             }
             catch (Exception ex)
             {

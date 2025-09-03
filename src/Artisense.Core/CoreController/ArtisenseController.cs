@@ -65,7 +65,8 @@ namespace Artisense.Core.CoreController
                 penInputService.PenUp += OnPenUp;
 
                 isEnabled = true;
-                logger.LogInformation("Artisense controller enabled");
+                logger.LogInformation("🎮 Artisense controller enabled");
+                Console.WriteLine("🎮 Controller: Pen event subscriptions active");
             }
             catch (Exception ex)
             {
@@ -132,12 +133,14 @@ namespace Artisense.Core.CoreController
         {
             if (!isEnabled)
             {
+                logger.LogInformation("Pen down event received but controller is disabled");
                 return;
             }
 
             try
             {
-                logger.LogDebug("Pen down - starting audio with pressure {Pressure:F3}", e.Pressure);
+                logger.LogInformation("🖊️ Pen down - starting audio with pressure {Pressure:F3}", e.Pressure);
+                Console.WriteLine($"🖊️ PEN DOWN! Pressure: {e.Pressure:F3}");
                 audioService.Start(e.Pressure);
             }
             catch (Exception ex)
@@ -155,7 +158,8 @@ namespace Artisense.Core.CoreController
 
             try
             {
-                logger.LogDebug("Pen move - updating pressure to {Pressure:F3}", e.Pressure);
+                logger.LogInformation("✏️ Pen move - updating pressure to {Pressure:F3}", e.Pressure);
+                Console.WriteLine($"✏️ PEN MOVE! Pressure: {e.Pressure:F3}");
                 audioService.SetPressure(e.Pressure);
             }
             catch (Exception ex)
@@ -173,7 +177,8 @@ namespace Artisense.Core.CoreController
 
             try
             {
-                logger.LogDebug("Pen up - stopping audio");
+                logger.LogInformation("🖊️ Pen up - stopping audio");
+                Console.WriteLine("🖊️ PEN UP! Stopping audio");
                 audioService.Stop();
             }
             catch (Exception ex)

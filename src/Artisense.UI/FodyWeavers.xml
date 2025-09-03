@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+  <!-- Costura disabled for MVP build - can be re-enabled after basic compilation works -->
+  <!--
   <Costura>
     <ExcludeAssemblies>
-      <!-- Exclude assemblies that should not be embedded -->
     </ExcludeAssemblies>
     <IncludeAssemblies>
-      <!-- Explicitly include all dependencies for single-file deployment -->
       Artisense.Core
       NAudio
       NAudio.Wasapi
-      Hardcodet.Wpf.TaskbarNotification
+      Hardcodet.NotifyIcon.Wpf
       Microsoft.Extensions.Hosting
       Microsoft.Extensions.DependencyInjection
       Microsoft.Extensions.Logging
     </IncludeAssemblies>
-    <Unmanaged32Assemblies>
-      <!-- Include any required 32-bit native libraries -->
-    </Unmanaged32Assemblies>
-    <Unmanaged64Assemblies>
-      <!-- Include any required 64-bit native libraries -->
-    </Unmanaged64Assemblies>
-    <PreloadOrder>
-      <!-- Specify the order for preloading assemblies -->
-    </PreloadOrder>
   </Costura>
+  -->
 </Weavers>

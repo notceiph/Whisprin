@@ -1,6 +1,7 @@
 // Copyright (c) Artisense. All rights reserved.
 
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using Artisense.Core.AudioService;
 using Artisense.Core.CoreController;
@@ -19,6 +20,14 @@ namespace Artisense.UI
     {
         private IHost? host;
         private TrayManager? trayManager;
+        
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool AllocConsole();
+        
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool FreeConsole();
 
         /// <summary>
         /// Application entry point.
@@ -28,11 +37,18 @@ namespace Artisense.UI
         {
             base.OnStartup(e);
 
+            // Allocate console for debugging
+            AllocConsole();
+            Console.WriteLine("🚀 Artisense starting up...");
+            Console.WriteLine("📋 Console output is now visible!");
+
             try
             {
                 // Build and start the host
                 host = CreateHost();
                 host.Start();
+                
+                Console.WriteLine("✅ Host started successfully");
 
                 // Initialize tray manager
                 var serviceProvider = host.Services;
@@ -41,9 +57,15 @@ namespace Artisense.UI
                     serviceProvider.GetRequiredService<IArtisenseController>());
 
                 trayManager.Initialize();
+                
+                Console.WriteLine("✅ Tray manager initialized");
+                Console.WriteLine("🖊️ Ready for pen input - try drawing!");
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ Startup failed: {ex.Message}");
+                Console.WriteLine($"📄 Stack trace: {ex.StackTrace}");
+                
                 MessageBox.Show(
                     $"Failed to start Artisense: {ex.Message}",
                     "Artisense Error",
@@ -62,14 +84,21 @@ namespace Artisense.UI
         {
             try
             {
+                Console.WriteLine("🛑 Shutting down Artisense...");
                 trayManager?.Dispose();
                 host?.StopAsync().Wait(TimeSpan.FromSeconds(5));
                 host?.Dispose();
+                Console.WriteLine("✅ Shutdown complete");
             }
             catch (Exception ex)
             {
                 // Log but don't prevent shutdown
+                Console.WriteLine($"❌ Error during shutdown: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Error during shutdown: {ex.Message}");
+            }
+            finally
+            {
+                FreeConsole();
             }
 
             base.OnExit(e);
@@ -80,15 +109,17 @@ namespace Artisense.UI
             return Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    // Register logging
+                    // Register logging with debug level
                     services.AddLogging(builder =>
                     {
-                        builder.SetMinimumLevel(LogLevel.Information);
+                        builder.SetMinimumLevel(LogLevel.Debug);
                         builder.AddConsole();
                         builder.AddDebug();
                     });
 
                     // Register input services
+                    services.AddSingleton<GlobalHookPenProvider>();
+                    services.AddSingleton<WindowsInkPenProvider>();
                     services.AddSingleton<RawInputPenProvider>();
                     services.AddSingleton<WintabPenProvider>();
                     services.AddSingleton<PenInputService>();

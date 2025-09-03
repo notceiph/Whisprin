@@ -1,0 +1,360 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Artisense.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Artisense.Core.AudioService.IAudioService">
+            <summary>
+            Interface for audio playback services that provide pressure-sensitive sound output.
+            </summary>
+        </member>
+        <member name="P:Artisense.Core.AudioService.IAudioService.IsPlaying">
+            <summary>
+            Gets a value indicating whether the audio service is currently playing.
+            </summary>
+        </member>
+        <member name="P:Artisense.Core.AudioService.IAudioService.VolumeOffsetDb">
+            <summary>
+            Gets or sets the volume offset in decibels (-12 to 0).
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.AudioService.IAudioService.Start(System.Single)">
+            <summary>
+            Starts audio playback with the specified pressure.
+            </summary>
+            <param name="pressure">The initial pressure value (0.0 to 1.0).</param>
+        </member>
+        <member name="M:Artisense.Core.AudioService.IAudioService.SetPressure(System.Single)">
+            <summary>
+            Updates the pressure value during playback.
+            </summary>
+            <param name="pressure">The new pressure value (0.0 to 1.0).</param>
+        </member>
+        <member name="M:Artisense.Core.AudioService.IAudioService.Stop">
+            <summary>
+            Stops audio playback.
+            </summary>
+        </member>
+        <member name="T:Artisense.Core.AudioService.LoopStream">
+            <summary>
+            A wave stream that loops audio data seamlessly with 128-sample alignment.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.AudioService.LoopStream.#ctor(NAudio.Wave.WaveStream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.AudioService.LoopStream"/> class.
+            </summary>
+            <param name="sourceStream">The source audio stream to loop.</param>
+        </member>
+        <member name="P:Artisense.Core.AudioService.LoopStream.WaveFormat">
+            <inheritdoc/>
+        </member>
+        <member name="P:Artisense.Core.AudioService.LoopStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:Artisense.Core.AudioService.LoopStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.AudioService.LoopStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.AudioService.LoopStream.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Artisense.Core.AudioService.PressureVolumeProcessor">
+            <summary>
+            Audio processor that applies pressure-based volume control with smoothing.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.AudioService.PressureVolumeProcessor.#ctor(NAudio.Wave.ISampleProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.AudioService.PressureVolumeProcessor"/> class.
+            </summary>
+            <param name="source">The source sample provider.</param>
+        </member>
+        <member name="P:Artisense.Core.AudioService.PressureVolumeProcessor.WaveFormat">
+            <inheritdoc/>
+        </member>
+        <member name="P:Artisense.Core.AudioService.PressureVolumeProcessor.VolumeOffsetDb">
+            <summary>
+            Gets or sets the volume offset in decibels (-12 to 0).
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.AudioService.PressureVolumeProcessor.SetPressure(System.Single)">
+            <summary>
+            Sets the target pressure value (0.0 to 1.0).
+            </summary>
+            <param name="pressure">The pressure value.</param>
+        </member>
+        <member name="M:Artisense.Core.AudioService.PressureVolumeProcessor.Read(System.Single[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Artisense.Core.AudioService.WasapiAudioService">
+            <summary>
+            Audio service implementation using WASAPI exclusive mode for low-latency playback.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.AudioService.WasapiAudioService.#ctor(Microsoft.Extensions.Logging.ILogger{Artisense.Core.AudioService.WasapiAudioService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.AudioService.WasapiAudioService"/> class.
+            </summary>
+            <param name="logger">The logger instance.</param>
+        </member>
+        <member name="P:Artisense.Core.AudioService.WasapiAudioService.IsPlaying">
+            <inheritdoc/>
+        </member>
+        <member name="P:Artisense.Core.AudioService.WasapiAudioService.VolumeOffsetDb">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.AudioService.WasapiAudioService.Start(System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.AudioService.WasapiAudioService.SetPressure(System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.AudioService.WasapiAudioService.Stop">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.AudioService.WasapiAudioService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.AudioService.WasapiAudioService.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the service and optionally releases the managed resources.
+            </summary>
+            <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        </member>
+        <member name="T:Artisense.Core.CoreController.ArtisenseController">
+            <summary>
+            Main controller that coordinates pen input events with audio output.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.CoreController.ArtisenseController.#ctor(Microsoft.Extensions.Logging.ILogger{Artisense.Core.CoreController.ArtisenseController},Artisense.Core.InputService.PenInputService,Artisense.Core.AudioService.IAudioService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.CoreController.ArtisenseController"/> class.
+            </summary>
+            <param name="logger">The logger instance.</param>
+            <param name="penInputService">The pen input service.</param>
+            <param name="audioService">The audio service.</param>
+        </member>
+        <member name="P:Artisense.Core.CoreController.ArtisenseController.IsEnabled">
+            <inheritdoc/>
+        </member>
+        <member name="P:Artisense.Core.CoreController.ArtisenseController.VolumeOffsetDb">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.CoreController.ArtisenseController.Enable">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.CoreController.ArtisenseController.Disable">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.CoreController.ArtisenseController.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.CoreController.ArtisenseController.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the controller and optionally releases the managed resources.
+            </summary>
+            <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        </member>
+        <member name="T:Artisense.Core.CoreController.IArtisenseController">
+            <summary>
+            Interface for the main Artisense controller that coordinates input and audio services.
+            </summary>
+        </member>
+        <member name="P:Artisense.Core.CoreController.IArtisenseController.IsEnabled">
+            <summary>
+            Gets a value indicating whether the controller is currently enabled.
+            </summary>
+        </member>
+        <member name="P:Artisense.Core.CoreController.IArtisenseController.VolumeOffsetDb">
+            <summary>
+            Gets or sets the volume offset in decibels (-12 to 0).
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.CoreController.IArtisenseController.Enable">
+            <summary>
+            Enables the controller to start processing pen input and generating audio.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.CoreController.IArtisenseController.Disable">
+            <summary>
+            Disables the controller to stop processing pen input and generating audio.
+            </summary>
+        </member>
+        <member name="T:Artisense.Core.InputService.IPenInputProvider">
+            <summary>
+            Interface for pen input providers that can capture global pen/stylus input.
+            </summary>
+        </member>
+        <member name="E:Artisense.Core.InputService.IPenInputProvider.PenDown">
+            <summary>
+            Occurs when the pen makes contact with the screen.
+            </summary>
+        </member>
+        <member name="E:Artisense.Core.InputService.IPenInputProvider.PenMove">
+            <summary>
+            Occurs when the pen moves while in contact with the screen.
+            </summary>
+        </member>
+        <member name="E:Artisense.Core.InputService.IPenInputProvider.PenUp">
+            <summary>
+            Occurs when the pen is lifted from the screen.
+            </summary>
+        </member>
+        <member name="P:Artisense.Core.InputService.IPenInputProvider.IsActive">
+            <summary>
+            Gets a value indicating whether the provider is currently active and listening for input.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.InputService.IPenInputProvider.Start">
+            <summary>
+            Starts listening for pen input events.
+            </summary>
+            <returns>True if successfully started, false otherwise.</returns>
+        </member>
+        <member name="M:Artisense.Core.InputService.IPenInputProvider.Stop">
+            <summary>
+            Stops listening for pen input events.
+            </summary>
+        </member>
+        <member name="T:Artisense.Core.InputService.PenEventArgs">
+            <summary>
+            Event arguments for pen input events.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.InputService.PenEventArgs.#ctor(System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.InputService.PenEventArgs"/> class.
+            </summary>
+            <param name="pressure">The normalized pressure value (0.0 to 1.0).</param>
+        </member>
+        <member name="P:Artisense.Core.InputService.PenEventArgs.Pressure">
+            <summary>
+            Gets the normalized pressure value from 0.0 (no pressure) to 1.0 (maximum pressure).
+            </summary>
+        </member>
+        <member name="T:Artisense.Core.InputService.PenInputService">
+            <summary>
+            Hosted service that manages pen input providers and provides unified pen input events.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.InputService.PenInputService.#ctor(Microsoft.Extensions.Logging.ILogger{Artisense.Core.InputService.PenInputService},Artisense.Core.InputService.RawInputPenProvider,Artisense.Core.InputService.WintabPenProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.InputService.PenInputService"/> class.
+            </summary>
+            <param name="logger">The logger instance.</param>
+            <param name="rawInputProvider">The raw input provider.</param>
+            <param name="wintabProvider">The Wintab provider.</param>
+        </member>
+        <member name="E:Artisense.Core.InputService.PenInputService.PenDown">
+            <summary>
+            Occurs when the pen makes contact with the screen.
+            </summary>
+        </member>
+        <member name="E:Artisense.Core.InputService.PenInputService.PenMove">
+            <summary>
+            Occurs when the pen moves while in contact with the screen.
+            </summary>
+        </member>
+        <member name="E:Artisense.Core.InputService.PenInputService.PenUp">
+            <summary>
+            Occurs when the pen is lifted from the screen.
+            </summary>
+        </member>
+        <member name="P:Artisense.Core.InputService.PenInputService.IsActive">
+            <summary>
+            Gets a value indicating whether the service is currently active and listening for input.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.InputService.PenInputService.ExecuteAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.PenInputService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:Artisense.Core.InputService.RawInputPenProvider">
+            <summary>
+            Pen input provider using Windows Raw Input API for global pen capture.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.InputService.RawInputPenProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Artisense.Core.InputService.RawInputPenProvider})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.InputService.RawInputPenProvider"/> class.
+            </summary>
+            <param name="logger">The logger instance.</param>
+        </member>
+        <member name="E:Artisense.Core.InputService.RawInputPenProvider.PenDown">
+            <inheritdoc/>
+        </member>
+        <member name="E:Artisense.Core.InputService.RawInputPenProvider.PenMove">
+            <inheritdoc/>
+        </member>
+        <member name="E:Artisense.Core.InputService.RawInputPenProvider.PenUp">
+            <inheritdoc/>
+        </member>
+        <member name="P:Artisense.Core.InputService.RawInputPenProvider.IsActive">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.RawInputPenProvider.Start">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.RawInputPenProvider.Stop">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.RawInputPenProvider.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.RawInputPenProvider.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the provider and optionally releases the managed resources.
+            </summary>
+            <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        </member>
+        <member name="T:Artisense.Core.InputService.RawInputPenProvider.RawInputMessageWindow">
+            <summary>
+            Native window for receiving raw input messages.
+            </summary>
+        </member>
+        <member name="T:Artisense.Core.InputService.WintabPenProvider">
+            <summary>
+            Fallback pen input provider using Wintab API for legacy device compatibility.
+            </summary>
+        </member>
+        <member name="M:Artisense.Core.InputService.WintabPenProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Artisense.Core.InputService.WintabPenProvider})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Artisense.Core.InputService.WintabPenProvider"/> class.
+            </summary>
+            <param name="logger">The logger instance.</param>
+        </member>
+        <member name="E:Artisense.Core.InputService.WintabPenProvider.PenDown">
+            <inheritdoc/>
+        </member>
+        <member name="E:Artisense.Core.InputService.WintabPenProvider.PenMove">
+            <inheritdoc/>
+        </member>
+        <member name="E:Artisense.Core.InputService.WintabPenProvider.PenUp">
+            <inheritdoc/>
+        </member>
+        <member name="P:Artisense.Core.InputService.WintabPenProvider.IsActive">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.WintabPenProvider.Start">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.WintabPenProvider.Stop">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.WintabPenProvider.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Artisense.Core.InputService.WintabPenProvider.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the provider and optionally releases the managed resources.
+            </summary>
+            <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        </member>
+    </members>
+</doc>

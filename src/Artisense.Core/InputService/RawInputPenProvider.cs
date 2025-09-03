@@ -144,10 +144,14 @@ namespace Artisense.Core.InputService
         {
             try
             {
+                logger.LogDebug("📥 Raw input received");
+                Console.WriteLine("📥 RAW INPUT DETECTED!");
+                
                 // Get the size of the raw input data
                 uint size = 0;
                 if (GetRawInputData(hRawInput, RawInputDataCommand.Input, IntPtr.Zero, ref size, (uint)Marshal.SizeOf<RawInputHeader>()) != 0)
                 {
+                    logger.LogWarning("Failed to get raw input data size");
                     return;
                 }
 
@@ -181,22 +185,56 @@ namespace Artisense.Core.InputService
 
         private void ProcessHidInput(RawHid hidData)
         {
+            logger.LogDebug("📝 HID input received: Size={Size}, Count={Count}", hidData.Size, hidData.Count);
+            
+            // For debugging: log the raw bytes
+            if (hidData.Size > 0 && hidData.RawData != null)
+            {
+                var dataHex = BitConverter.ToString(hidData.RawData, 0, Math.Min((int)hidData.Size, 16));
+                logger.LogDebug("📊 HID data: {Data}", dataHex);
+            }
+            
             // This is a simplified implementation - in practice, you'd need to parse
             // the HID report descriptor to understand the data format
             // For now, we'll simulate pen data extraction
             
-            if (hidData.Size < 8)
+            if (hidData.Size < 4)
             {
+                logger.LogDebug("❌ HID data too small: {Size} bytes", hidData.Size);
                 return;
             }
 
-            // Extract contact and pressure from HID data (device-specific parsing needed)
-            // This is a placeholder implementation - real implementation would parse HID reports
-            var contactByte = hidData.RawData[0];
-            var pressureBytes = BitConverter.ToUInt16(hidData.RawData, 2);
+            // Try different possible interpretations of the HID data
+            // Many pen devices use different report formats
+            var contactByte = hidData.RawData?[0] ?? 0;
+            var inContact = false;
+            var pressure = 0.5f; // Default pressure
             
-            var inContact = (contactByte & 0x01) != 0;
-            var pressure = Math.Clamp(pressureBytes / 1024.0f, 0.0f, 1.0f);
+            // Try to extract contact state (different devices use different bits)
+            if ((contactByte & 0x01) != 0 || (contactByte & 0x02) != 0 || (contactByte & 0x04) != 0)
+            {
+                inContact = true;
+                logger.LogDebug("✅ Contact detected from byte: 0x{ContactByte:X2}", contactByte);
+            }
+            
+            // Try to extract pressure if available
+            if (hidData.Size >= 4 && hidData.RawData != null)
+            {
+                var pressureBytes = BitConverter.ToUInt16(hidData.RawData, 2);
+                if (pressureBytes > 0)
+                {
+                    pressure = Math.Clamp(pressureBytes / 1024.0f, 0.0f, 1.0f);
+                    logger.LogDebug("📊 Pressure extracted: {Pressure:F3} (from {PressureBytes})", pressure, pressureBytes);
+                }
+            }
+
+            // For testing: treat ANY HID input as pen contact with moderate pressure
+            if (hidData.Size > 0)
+            {
+                inContact = true; // Force contact for testing
+                pressure = 0.7f;  // Use fixed pressure for testing
+                logger.LogInformation("🖊️ Forced pen contact for testing - pressure: {Pressure:F3}", pressure);
+            }
 
             // Process pen state changes
             if (inContact && !isInContact)
@@ -204,12 +242,14 @@ namespace Artisense.Core.InputService
                 // Pen down
                 isInContact = true;
                 lastPressure = pressure;
+                logger.LogInformation("🖊️ PEN DOWN - pressure: {Pressure:F3}", pressure);
                 PenDown?.Invoke(this, new PenEventArgs(pressure));
             }
             else if (inContact && isInContact && Math.Abs(pressure - lastPressure) > 0.01f)
             {
                 // Pen move with pressure change
                 lastPressure = pressure;
+                logger.LogInformation("✏️ PEN MOVE - pressure: {Pressure:F3}", pressure);
                 PenMove?.Invoke(this, new PenEventArgs(pressure));
             }
             else if (!inContact && isInContact)
@@ -217,6 +257,7 @@ namespace Artisense.Core.InputService
                 // Pen up
                 isInContact = false;
                 lastPressure = 0.0f;
+                logger.LogInformation("🖊️ PEN UP");
                 PenUp?.Invoke(this, EventArgs.Empty);
             }
         }

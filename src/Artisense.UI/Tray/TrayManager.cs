@@ -20,7 +20,9 @@ namespace Artisense.UI.Tray
         private TaskbarIcon? trayIcon;
         private ContextMenu? contextMenu;
         private MenuItem? enabledMenuItem;
+#pragma warning disable S1450 // Field used for UI element lifecycle management
         private Slider? volumeSlider;
+#pragma warning restore S1450
         private bool isDisposed;
 
         /// <summary>

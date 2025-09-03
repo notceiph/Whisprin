@@ -65,7 +65,7 @@ namespace Artisense.Tests.Benchmarks
         /// Entry point for running benchmarks standalone.
         /// </summary>
         /// <param name="args">Command line arguments.</param>
-        public static void Main(string[] args)
+        public static void BenchmarkMain(string[] args)
         {
             if (args.Length > 0 && args[0].Contains("LatencyBenchmark"))
             {

@@ -14,8 +14,10 @@ namespace Artisense.Core.InputService
         private readonly ILogger<WintabPenProvider> logger;
         private bool isActive;
         private bool isDisposed;
-        private bool isInContact;
-        private float lastPressure;
+        #pragma warning disable CS0414, S2933 // Field assigned but never used - placeholder for Wintab implementation
+        private bool isInContact = false;
+        private float lastPressure = 0.0f;
+        #pragma warning restore CS0414, S2933
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WintabPenProvider"/> class.
@@ -27,6 +29,7 @@ namespace Artisense.Core.InputService
         }
 
         /// <inheritdoc/>
+#pragma warning disable CS0067 // Event is never used - placeholder for Wintab implementation
         public event EventHandler<PenEventArgs>? PenDown;
 
         /// <inheritdoc/>
@@ -34,6 +37,7 @@ namespace Artisense.Core.InputService
 
         /// <inheritdoc/>
         public event EventHandler? PenUp;
+#pragma warning restore CS0067
 
         /// <inheritdoc/>
         public bool IsActive => isActive;

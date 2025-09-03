@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Artisense.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+259b41bb3fb7ad8583f4384388e440e9f2f6e316")]
 [assembly: System.Reflection.AssemblyProductAttribute("Artisense.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Artisense.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

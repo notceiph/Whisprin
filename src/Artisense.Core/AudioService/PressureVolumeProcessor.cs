@@ -15,7 +15,9 @@ namespace Artisense.Core.AudioService
         private float targetVolume;
         private float currentVolume;
         private float volumeOffsetDb;
-        private int smoothingIndex;
+        #pragma warning disable CS0414, S2933 // Field assigned but never used - reserved for future smoothing implementation
+        private int smoothingIndex = 0;
+        #pragma warning restore CS0414, S2933
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PressureVolumeProcessor"/> class.

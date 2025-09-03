@@ -1,0 +1,7 @@
+C:\Users\Ceiph\Documents\GitHub\Whisprin\tests\Artisense.Tests\bin\Release\net6.0-windows\CoverletSourceRootsMapping_Artisense.Tests
+C:\Users\Ceiph\Documents\GitHub\Whisprin\tests\Artisense.Tests\obj\Release\net6.0-windows\Artisense.Tests.csproj.AssemblyReference.cache
+C:\Users\Ceiph\Documents\GitHub\Whisprin\tests\Artisense.Tests\obj\Release\net6.0-windows\Artisense.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ceiph\Documents\GitHub\Whisprin\tests\Artisense.Tests\obj\Release\net6.0-windows\Artisense.Tests.AssemblyInfoInputs.cache
+C:\Users\Ceiph\Documents\GitHub\Whisprin\tests\Artisense.Tests\obj\Release\net6.0-windows\Artisense.Tests.AssemblyInfo.cs
+C:\Users\Ceiph\Documents\GitHub\Whisprin\tests\Artisense.Tests\obj\Release\net6.0-windows\Artisense.Tests.csproj.CoreCompileInputs.cache
+C:\Users\Ceiph\Documents\GitHub\Whisprin\tests\Artisense.Tests\obj\Release\net6.0-windows\Artisense.Tests.sourcelink.json
