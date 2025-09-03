@@ -1,0 +1,5 @@
+C:\Users\Ceiph\Documents\GitHub\Whisprin\src\Artisense.Core\obj\Release\net6.0-windows\Artisense.Core.csproj.AssemblyReference.cache
+C:\Users\Ceiph\Documents\GitHub\Whisprin\src\Artisense.Core\obj\Release\net6.0-windows\Artisense.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ceiph\Documents\GitHub\Whisprin\src\Artisense.Core\obj\Release\net6.0-windows\Artisense.Core.AssemblyInfoInputs.cache
+C:\Users\Ceiph\Documents\GitHub\Whisprin\src\Artisense.Core\obj\Release\net6.0-windows\Artisense.Core.AssemblyInfo.cs
+C:\Users\Ceiph\Documents\GitHub\Whisprin\src\Artisense.Core\obj\Release\net6.0-windows\Artisense.Core.csproj.CoreCompileInputs.cache
