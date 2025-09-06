@@ -35,12 +35,12 @@ namespace Artisense.Core.InputService
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             
-            // Order providers by preference (Global Hook first for maximum compatibility)
+            // Order providers by preference (Windows Ink first for Wacom tablets)
             providers = new IPenInputProvider[]
             {
-                globalHookProvider ?? throw new ArgumentNullException(nameof(globalHookProvider)),
                 windowsInkProvider ?? throw new ArgumentNullException(nameof(windowsInkProvider)),
                 rawInputProvider ?? throw new ArgumentNullException(nameof(rawInputProvider)),
+                globalHookProvider ?? throw new ArgumentNullException(nameof(globalHookProvider)),
                 wintabProvider ?? throw new ArgumentNullException(nameof(wintabProvider))
             };
         }
